@@ -1,7 +1,6 @@
 library(readr)
 library(twitteR)
 library(tm)
-library(wordcloud)
 
 
 CACHE_DIR <- file.path("cache")
@@ -67,4 +66,34 @@ downloadNewTweets <- function(search_terms, last_cached_tweet) {
 # Cache list of tweets. Return nothing.
 cacheTweets <- function(tweets) {
   write_csv(tweets, path = TWEETS_CSV)
+}
+
+
+# Clean corpus text. Return text corpus.
+createCleanTextCorpus <- function(text) {
+  # omit all non-english symbols, including emoticons
+  text <- sapply(text, function(row) iconv(row, "latin1", "ASCII", sub=""))
+  #convert all text to lower case
+  text <- tolower(text)
+  # Replace rt with blank space
+  text <- gsub("rt", "", text)
+  # Replace @UserName
+  text <- gsub("@\\w+", "", text)
+  # Remove punctuation
+  text <- gsub("[[:punct:]]", "", text)
+  # Remove links -- though obviously you might WANT links for your analysis
+  text <- gsub("http\\w+", "", text)
+  # Remove tabs
+  text <- gsub("[ |\t]{2,}", "", text)
+  # Remove blank spaces at the beginning
+  text <- gsub("^ ", "", text)
+  # Remove blank spaces at the end
+  text <- gsub(" $", "", text)
+
+  # create TM corpus
+  text_corpus <- Corpus(VectorSource(text))
+  # remove stopwords
+  text_corpus <- tm_map(text_corpus, function(x) removeWords(x, stopwords()))
+
+  return(text_corpus)
 }

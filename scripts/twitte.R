@@ -2,6 +2,7 @@ library(base64enc)
 library(httr)
 library(rjson)
 library(twitteR)
+library(wordcloud)
 
 
 options(scipen=999)  # disable scientific notation
@@ -32,3 +33,19 @@ new_tweets <- twListToDF(new_tweets.list)
 # Combine and (re-)cache all unique tweets
 tweets <- unique(rbind(cached_tweets, new_tweets))
 cacheTweets(tweets)
+
+
+# Analysis
+# --------------------------------------------------
+
+clean_tweets_corpus <- createCleanTextCorpus(tweets$text)
+
+# Word cloud
+wordcloud(clean_tweets_corpus,
+    min.freq = 2,
+    scale = c(7, .8),
+    colors = brewer.pal(8, "Dark2"),
+    random.color = TRUE,
+    random.order = FALSE,
+    max.words = 150
+    )
