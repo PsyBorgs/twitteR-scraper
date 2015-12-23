@@ -5,7 +5,8 @@ install.packages(
     "base64enc",  # required for TwitteR OAuth
     "tm",
     "wordcloud",
-    "jsonlite"
+    "jsonlite",
+    "readr"
   ),
   repos = "http://cran.us.r-project.org"
 )

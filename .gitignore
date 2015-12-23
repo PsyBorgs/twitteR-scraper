@@ -1,5 +1,6 @@
 # Project
 config.json
+cache/*.csv
 
 # RStudio
 .Rproj.user
