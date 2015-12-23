@@ -21,11 +21,14 @@ It aims to do this by caching recent tweets related to your given terms/hashtags
 - [R](https://www.r-project.org/)
 - [RStudio](www.rstudio.com/) (recommended)
 
-(Note: Also ensure that you have installed the most up-to-date versions of the packages used in each R script.)
 
 ## Installation
 
-Edit the `config.json` file to include the following:
+Install the required R packages:
+
+    $ Rscript requirements.R
+
+Create a `config.json` file (by copying `config-sample.json`) and configure the following:
 
 - Your [Twitter API OAuth access tokens](https://dev.twitter.com/oauth/overview/application-owner-access-tokens) (note: you have to create a new "application" in your dev account)
 - Your terms/hashtags of interest (e.g. `epigenetics`, `#epigenomics`)

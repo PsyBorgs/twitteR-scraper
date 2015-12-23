@@ -1,0 +1,11 @@
+# Project
+config.json
+
+# RStudio
+.Rproj.user
+*.Rproj
+.Rhistory
+.RData
+
+# TwitteR library
+.httr-oauth
