@@ -1,15 +1,17 @@
 library(base64enc)
 library(httr)
-library(jsonlite)
+library(rjson)
 library(twitteR)
 
 
 options(scipen=999)  # disable scientific notation
+
+
+# Import project functions
 source("scripts/functions.R")
 
-
 # Import configuration settings
-cfg <- jsonlite::fromJSON("config.json")
+cfg <- rjson::fromJSON(file = "config.json")
 
 # Setup Twitter authentication
 twitteR::setup_twitter_oauth(

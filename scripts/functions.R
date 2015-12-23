@@ -1,4 +1,3 @@
-library(jsonlite)
 library(readr)
 library(twitteR)
 library(tm)
@@ -65,7 +64,7 @@ downloadNewTweets <- function(search_terms, last_cached_tweet) {
 }
 
 
-# Cache list of jsonified tweets. Return nothing.
+# Cache list of tweets. Return nothing.
 cacheTweets <- function(tweets) {
   write_csv(tweets, path = TWEETS_CSV)
 }
