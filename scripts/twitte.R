@@ -28,6 +28,5 @@ new_tweets.list <- downloadNewTweets(cfg$search_terms, last_cached_tweet)
 new_tweets <- twListToDF(new_tweets.list)
 
 # Combine and (re-)cache all unique tweets
-combined_tweets <- rbind(cached_tweets, new_tweets)
-tweets <- unique(combined_tweets)
+tweets <- unique(rbind(cached_tweets, new_tweets))
 cacheTweets(tweets)

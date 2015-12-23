@@ -7,8 +7,7 @@ library(wordcloud)
 
 CACHE_DIR <- file.path("cache")
 TWEETS_CSV <- file.path(CACHE_DIR, "tweets.csv")
-# MAX_TWEETS <- 45000  # rate-limit of 450 requests per 15 minutes * 100 tweets per request max
-MAX_TWEETS <- 200
+MAX_TWEETS <- 100  # number of tweets to return per request; API maximum is 100
 
 
 # Get cached tweets (from previous searches). Return list of lists.
@@ -34,8 +33,6 @@ getLatestCachedTweet <- function(cached_tweets) {
 # Search Twitter and download the most recent tweets containing terms of
 # interest. Return list of lists.
 downloadNewTweets <- function(search_terms, last_cached_tweet) {
-  max_tweets <- floor(MAX_TWEETS / length(search_terms))
-
   # Get ID of last tweet
   last_tweet_id <- NULL
   if (typeof(last_cached_tweet) == "list" &&
@@ -48,11 +45,12 @@ downloadNewTweets <- function(search_terms, last_cached_tweet) {
   for (term in search_terms) {
     print(paste0(
       "Searching Twitter for tweets with the term '", term, "'",
-      " (max. ", max_tweets, " tweets)..."
+      " (max. ", MAX_TWEETS, " tweets)..."
       )
     )
 
     term_tweets <- twitteR::searchTwitter(term,
+      n = MAX_TWEETS,
       sinceID = last_tweet_id
       )
 
