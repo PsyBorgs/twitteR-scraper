@@ -5,7 +5,7 @@ library(tm)
 
 CACHE_DIR <- file.path("cache")
 TWEETS_CSV <- file.path(CACHE_DIR, "tweets.csv")
-MAX_TWEETS <- 100  # number of tweets to return per request; API maximum is 100
+MAX_TWEETS <- 1500
 
 
 # Get cached tweets (from previous searches). Return list of lists.
@@ -31,6 +31,8 @@ getLatestCachedTweet <- function(cached_tweets) {
 # Search Twitter and download the most recent tweets containing terms of
 # interest. Return list of lists.
 downloadNewTweets <- function(search_terms, last_cached_tweet) {
+  new_tweets <- NULL
+
   # Get ID of last tweet
   last_tweet_id <- NULL
   if (typeof(last_cached_tweet) == "list" &&
@@ -39,27 +41,25 @@ downloadNewTweets <- function(search_terms, last_cached_tweet) {
   }
 
   # Download tweets for each search term
-  tweets <- c()
-  for (term in search_terms) {
-    print(paste0(
-      "Searching Twitter for tweets with the term '", term, "'",
-      " (max. ", MAX_TWEETS, " tweets)..."
-      )
+  query <- paste(search_terms, collapse = " OR ")
+  print(paste0(
+    "Searching Twitter for tweets with the query '", query, "'",
+    " (max. ", MAX_TWEETS, " tweets)..."
     )
+  )
+  new_tweets.list <- twitteR::searchTwitter(query,
+    n = MAX_TWEETS,
+    sinceID = last_tweet_id
+    )
+  print(paste("Found", length(new_tweets), "tweets."))
 
-    term_tweets <- twitteR::searchTwitter(term,
-      n = MAX_TWEETS,
-      sinceID = last_tweet_id
-      )
-
-    print(paste("Found", length(term_tweets), "tweets."))
-
-    tweets <- c(tweets, term_tweets, recursive = TRUE)
+  # Convert list of tweets to data frame
+  print(length(new_tweets.list) > 0)
+  if (length(new_tweets.list) > 0) {
+    new_tweets <- twListToDF(new_tweets.list)
   }
 
-  tweets.df <- twListToDF(tweets)
-
-  return(tweets)
+  return(new_tweets)
 }
 
 
