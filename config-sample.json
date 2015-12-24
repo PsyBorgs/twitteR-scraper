@@ -6,7 +6,8 @@
         "access_secret": "[YOUR_ACCESS_TOKEN_SECRET]"
     },
     "search_terms": [
-        "epigenetics",
-        "#epigenenomics"
+        "#epigenetics",
+        "\"digital humanities\"",
+        "@DataSciNews"
     ]
 }

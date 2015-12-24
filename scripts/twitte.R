@@ -1,9 +1,8 @@
-library(base64enc)
-library(httr)
 library(rjson)
 library(twitteR)
 library(wordcloud)
 
+# TODO: convert to use https://github.com/Btibert3/twitter-bot-highered/blob/master/bot.R
 
 options(scipen=999)  # disable scientific notation
 
@@ -16,22 +15,14 @@ cfg <- rjson::fromJSON(file = "config.json")
 
 # Setup Twitter authentication
 twitteR::setup_twitter_oauth(
-    cfg$twitter$consumer_key,
-    cfg$twitter$consumer_secret,
-    cfg$twitter$access_token,
-    cfg$twitter$access_secret
-    )
+  cfg$twitter$consumer_key,
+  cfg$twitter$consumer_secret,
+  cfg$twitter$access_token,
+  cfg$twitter$access_secret
+)
 
-# Get caches tweets (if any exist)
-cached_tweets <- getCachedTweets()
-last_cached_tweet <- getLatestCachedTweet(cached_tweets)
-
-# Search Twitter for tweets with given search terms
-new_tweets <- downloadNewTweets(cfg$search_terms, last_cached_tweet)
-
-# Combine and (re-)cache all unique tweets
-tweets <- unique(rbind(cached_tweets, new_tweets))
-cacheTweets(tweets)
+# Get tweets
+tweets <- getTweets(search_terms = cfg$search_terms)
 
 
 # Analysis

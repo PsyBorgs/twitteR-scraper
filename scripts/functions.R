@@ -1,6 +1,8 @@
+library(base64enc)
+library(httr)
 library(readr)
-library(twitteR)
 library(tm)
+library(twitteR)
 
 
 CACHE_DIR <- file.path("cache")
@@ -49,9 +51,10 @@ downloadNewTweets <- function(search_terms, last_cached_tweet) {
   )
   new_tweets.list <- twitteR::searchTwitter(query,
     n = MAX_TWEETS,
-    sinceID = last_tweet_id
+    sinceID = last_tweet_id,
+    lang = "en"
     )
-  print(paste("Found", length(new_tweets), "tweets."))
+  print(paste("Found", length(new_tweets.list), "tweets."))
 
   # Convert list of tweets to data frame
   print(length(new_tweets.list) > 0)
@@ -66,6 +69,24 @@ downloadNewTweets <- function(search_terms, last_cached_tweet) {
 # Cache list of tweets. Return nothing.
 cacheTweets <- function(tweets) {
   write_csv(tweets, path = TWEETS_CSV)
+}
+
+
+# Collect cached and new tweets. Cache new tweets and return data frame.
+getTweets <- function(search_terms) {
+
+  # Get caches tweets (if any exist)
+  cached_tweets <- getCachedTweets()
+  last_cached_tweet <- getLatestCachedTweet(cached_tweets)
+
+  # Search Twitter for latest tweets with given search terms
+  new_tweets <- downloadNewTweets(search_terms, last_cached_tweet)
+
+  # Combine and (re-)cache all unique tweets
+  tweets <- unique(rbind(cached_tweets, new_tweets))
+  cacheTweets(tweets)
+
+  return(tweets)
 }
 
 
